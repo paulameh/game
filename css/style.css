@@ -154,17 +154,17 @@ body{
     } 
 
     #fundo {
-        top: 5.5vh;
+        top: 6vh;
         width: 90vw;
         height: 53vh;
     }
 
     #points{
-        top: 2.5vh;
+        top: 3vh;
     }
     
     #painel {
-        top: 59.5vh;
+        top: 60vh;
         width: 90vw;
         height: 35vh;
     }
