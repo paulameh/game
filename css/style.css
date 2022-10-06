@@ -154,20 +154,24 @@ body{
     } 
 
     #fundo {
-        position: absolute;
+        top: 7vh;
         width: 90vw;
-        height: 60vh;
+        height: 53vh;
+    }
+
+    #points{
+        top: 4vh;
     }
     
     #painel {
-        top: 64vh;
+        top: 61vh;
         width: 90vw;
         height: 35vh;
     }
 
 
     #endGame{
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         width: 90vw;
         left: 5vw;
     }
