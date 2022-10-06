@@ -210,7 +210,7 @@ shootControl = [];
 
 random = Math.random;
 
-shootin();
+setTimeout('shootin()', 3000);
 
 function shootin(){
 
