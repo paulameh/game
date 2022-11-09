@@ -1,4 +1,15 @@
 //Ao carregar a página estas linhas são executadas. 
+let popUp = document.querySelector('#popUp');
+popUp.innerHTML = 'Bem vind@! <hr><br><br>>Neste hoje o teu objetivo é capturar o quadrado vermelho tanto quanto possível.<br><br> A quantidade de vezes que tu consiguir será convertida em pontos <br><br>Mas cuidado! Ao longo da partida, projéteis serão lançados contra ti! Desvie deles.<br><br>Ambas velocidades, dos projéteis e do teu quadrado aumentam com o tempo, tenha isso em mente.<br><br>E é isso, bom jogo! <br><br><button type="button" id="again" onclick= "start()">Começar</button>';
+
+function start(){
+    popUp.style.display = 'none';
+    popUp.innerHTML = '';
+    shootin();
+}
+
+wind
+
 ghr = 0;
 contador = '';
 let cont = 0;
@@ -57,7 +68,6 @@ function getTile(){
         div2.style.top = tileY * luckY - div2Height;
     else
     div2.style.top = tileY * luckY;
-
 }
 
 // Mover cursor 1  - através dos botões
@@ -196,7 +206,6 @@ function drawPoints(){
         speed += increaseRate;
     if(points % 5 == 0)
         shootSpeed += .5;
-
 }
 
 
@@ -209,8 +218,6 @@ n = 0;
 shootControl = [];
 
 random = Math.random;
-
-setTimeout('shootin()', 3000);
 
 function shootin(){
 
@@ -319,5 +326,3 @@ function endGame () {
     document.body.appendChild(popUp);
 }
 
-
-alert('----Bem vind@! \n\nNeste hoje o teu objetivo é capturar o quadrado vermelho tanto quanto possível. \n\n A quantidade de vezes que tu consigui será convertida em pontos.\n\nMas cuidado! Ao longo da partida, projéteis serão lançados contra ti! Desvie deles.  \n\nAmbas velocidades, dos projéteis e do teu quadrado aumentam com o tempo, tenha isso em mente. \n\nE é isso, bom jogo!');

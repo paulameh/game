@@ -1,12 +1,12 @@
-*{
+* {
     margin: 0;
     padding: 0;
 
 }
 
-body{
+body {
     z-index: 10;
-    background-image: linear-gradient(rgb(33, 33, 33),rgb(42, 42, 42));
+    background-image: linear-gradient(rgb(33, 33, 33), rgb(42, 42, 42));
     min-height: 600px;
 }
 
@@ -38,25 +38,25 @@ body{
     background-color: rgb(45, 32, 25);
 }
 
-#painel > button{
+#painel>button {
     height: 70px;
     width: 70px;
     border: none;
     background-color: inherit;
     border-radius: 10px;
-    -webkit-user-drag: none;
 }
 
-#painel button:hover{
+#painel button:hover {
     background-color: rgb(187, 187, 187);
 }
 
-#painel img{
+#painel img {
     width: 100%;
-    height: 100%;   
+    height: 100%;
+    -webkit-user-drag: none;
 }
 
-.down{
+.down {
     margin-top: .3rem;
 }
 
@@ -79,11 +79,11 @@ body{
     height: 5vw;
     background-color: yellow;
     box-shadow: 0 0 8px rgb(223, 194, 9);
-}   
+}
 
-#points{
+#points {
     font-size: 1.3rem;
-    font-family:'Courier New', Courier, monospace;
+    font-family: 'Courier New', Courier, monospace;
     color: white;
     background-color: tomato;
     border-left: 2px solid rgb(196, 196, 196);
@@ -96,17 +96,17 @@ body{
     z-index: 99;
 }
 
-.shoot{
+.shoot {
     background-color: rgb(255, 0, 166);
     width: 15px;
     height: 15px;
     border-radius: 10px;
-    position:absolute;
+    position: absolute;
     z-index: 1000;
     box-shadow: 0 0 15px 7px rgb(223, 60, 87);
 }
 
-#endGame{
+#endGame {
     width: 80vw;
     position: absolute;
     top: 12vh;
@@ -124,13 +124,30 @@ body{
     /* box-shadow: 0px 0px 80px white; */
 }
 
-#again{
+#popUp {
+    width: 80vw;
+    position: absolute;
+    top: 12vh;
+    left: 10vw;
+    background-image: linear-gradient(to bottom right, rgb(176, 27, 27), rgb(135, 15, 15));
+    color: white;
+    font-size: 1.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    z-index: 10000;
+    box-sizing: border-box;
+    padding: 3rem;
+    border-radius: 60px;
+    outline: 2px solid white;
+}
+
+#again {
     height: 30%;
     width: 30%;
     margin: 0 auto;
     font-size: 1.4rem;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color:white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
     background-color: tomato;
     box-sizing: border-box;
     padding: .5rem;
@@ -139,20 +156,20 @@ body{
     transition: .75s ease-in-out;
 }
 
-#again:hover{
+#again:hover {
     background-color: rgb(245, 61, 29);
 }
 
-@media(max-width: 600px){
+@media(max-width: 600px) {
     #div2 {
         width: 3vw;
         height: 3vw;
     }
-    
+
     #div1 {
         width: 6vw;
         height: 6vw;
-    } 
+    }
 
     #fundo {
         top: 6vh;
@@ -160,10 +177,10 @@ body{
         height: 53vh;
     }
 
-    #points{
+    #points {
         top: 3vh;
     }
-    
+
     #painel {
         top: 60vh;
         width: 90vw;
@@ -171,13 +188,13 @@ body{
     }
 
 
-    #endGame{
+    #endGame {
         font-size: 1.2rem;
         width: 90vw;
         left: 5vw;
     }
 
-    #again{
+    #again {
         width: auto;
     }
 }
