@@ -1,0 +1,16 @@
+{
+    "name": "LilGame",
+    "short_name": "LilGame",
+    "theme_color": "#ff6347",
+    "background_color": "#ff6347",
+    "display": "standalone",
+    "start_url": "./index.html",
+    "scope": "(./)",
+    "icons": [
+        {
+            "src": "../imgs/icon.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        }
+    ]
+}

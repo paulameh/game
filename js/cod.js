@@ -1,51 +1,79 @@
 //Ao carregar a página estas linhas são executadas. 
-let popUp = document.querySelector('#popUp');
-popUp.innerHTML = 'Bem vind@! <hr><br><br>>Neste hoje o teu objetivo é capturar o quadrado vermelho tanto quanto possível.<br><br> A quantidade de vezes que tu consiguir será convertida em pontos <br><br>Mas cuidado! Ao longo da partida, projéteis serão lançados contra ti! Desvie deles.<br><br>Ambas velocidades, dos projéteis e do teu quadrado aumentam com o tempo, tenha isso em mente.<br><br>E é isso, bom jogo! <br><br><button type="button" id="again" onclick= "start()">Começar</button>';
+popUp = document.querySelector('#popUp');
+popUp.innerHTML = 'Bem vind@! <hr><br><br>>ㅤNeste hoje o teu objetivo é capturar o quadrado vermelho tanto quanto possível.<br><br> A quantidade de vezes que tu consiguir será convertida em pontos <br><br>Mas cuidado! Ao longo da partida, projéteis serão lançados contra ti! Desvie deles.<br><br>Ambas velocidades, dos projéteis e do teu quadrado aumentam com o tempo, tenha isso em mente.<br><br>E é isso, bom jogo! <br><br><button type="button" id="again" onclick= "start()">Começar</button>';
+
+soundEffect = new Audio('../sounds/shoot.mp3')
+soundEffect.volume = .2;
+
+score = new Audio('../sounds/score.mp3');
+score.volume = .02;
+
+music = new Audio('../sounds/music.mp3');
+music.volume = .01;
+musicCounter = 0;
+
+function sound(counter){
+    musicIcon = document.querySelector('#musicIcon');
+    if(counter == 0){
+        music.volume = 0;
+        musicIcon.setAttribute('src', '../imgs/mute.png')
+        musicCounter = 1;
+        return
+    }
+    if(counter == 1){
+        musicIcon.setAttribute('src', '../imgs/sound.png')
+        musicCounter = 0;
+        music.volume = .01;
+        return
+    }
+}
 
 function start(){
+    pointCounter = 0 + Number(localStorage.getItem('index'));
+    music.play();
+    music.loop = true;
+    div1.style.left = headX;
+    div1.style.top = headY;
     popUp.style.display = 'none';
     popUp.innerHTML = '';
     shootin();
+    ghr = 0;
+    contador = '';
+    cont = 0;
+    timer = '';
+    impact = setInterval("colisao()", 1);
+    mLock = 0;
+    getTile();
+
+    if(window.innerWidth > 500){
+        speed = 7;
+        shootSpeed = 5;
+        increaseRate = 2;
+        borderHelper = 1.2;
+    }
+    else {
+        speed = 2.5;
+        shootSpeed = 3;
+        increaseRate = 1.5;
+        borderHelper = 1.3;
+    }
+
 }
-
-wind
-
-ghr = 0;
-contador = '';
-let cont = 0;
-let impact = setInterval("colisao()", 1);
-let timer = '';
 
 document.querySelector("#acima").addEventListener("click", () => { move('acima') });
 document.querySelector("#esquerda").addEventListener("click", () => { move('esquerda') });
 document.querySelector("#direita").addEventListener("click", () => { move('direita') });
-document.querySelector("#baixo").addEventListener("click", () => { move('baixo') });
-document.querySelector("#acima").addEventListener("click", () => { move('acima') });    
+document.querySelector("#baixo").addEventListener("click", () => { move('baixo') });  
 
 
 //20 tiles
 tileX = parseInt(getComputedStyle(fundo).width) / 20;
 tileY = parseInt(getComputedStyle(fundo).height) / 20;
-window.onload = getTile();
+// window.onload = getTile();
 headX = tileX * 10;
 headY = tileY * 10;
 refreshRate = 20;
 points = 0;
-
-if(window.innerWidth > 500){
-    speed = 7;
-    increaseRate = 2;
-    borderHelper = 1.2;
-}
-else {
-    speed = 3;
-    increaseRate = 1.5;
-    borderHelper = 1.3;
-}
-
-div1.style.left = headX;
-div1.style.top = headY;
-
 
 
 function getTile(){
@@ -75,22 +103,22 @@ function move(Direcao) {
     if (contador != '') {
         para();
     }
-    if (Direcao == "direita") {
+    if (Direcao == "direita" && mLock == 0) {
         timer = setInterval("direita()", refreshRate);
         contador = 'direita';
     }
 
-    if (Direcao == "esquerda") {
+    if (Direcao == "esquerda" && mLock == 0) {
         timer = setInterval("esquerda()", refreshRate);
         contador = 'esquerda';
     }
 
-    if (Direcao == "acima") {
+    if (Direcao == "acima" && mLock == 0) {
         timer = setInterval("acima()", refreshRate);
         contador = 'acima';;
     }
 
-    if (Direcao == "baixo") {
+    if (Direcao == "baixo" && mLock == 0) {
         timer = setInterval("baixo()", refreshRate);
         contador = 'baixo';;
     }
@@ -102,8 +130,8 @@ function direita() {
     let div1Left = parseInt(getComputedStyle(div1).left);
     let fundoWidth = parseInt(getComputedStyle(fundo).width);
     let div1Width = parseInt(getComputedStyle(div1).width);
-
-    div1.style.left = div1Left + speed;
+    if (mLock == 0)
+        div1.style.left = div1Left + speed;
     if (div1Left >= fundoWidth - div1Width * borderHelper) {
         clearInterval(timer);
         timer = setInterval("esquerda()", refreshRate);
@@ -114,7 +142,8 @@ function esquerda() {
 
     let div1Left = parseInt(getComputedStyle(div1).left);
 
-    div1.style.left = div1Left - speed;
+    if (mLock == 0)
+        div1.style.left = div1Left - speed;
     if (div1Left <= 0) {
         clearInterval(timer);
         timer = setInterval("direita()", refreshRate);
@@ -127,7 +156,8 @@ function baixo() {
     let fundoHeight = parseInt(getComputedStyle(fundo).height);
     let div1Height = parseInt(getComputedStyle(div1).height);
 
-    div1.style.top = div1Top + speed;
+    if (mLock == 0)
+        div1.style.top = div1Top + speed;
     if (div1Top >= fundoHeight - div1Height * borderHelper) {
         clearInterval(timer);
         timer = setInterval("acima()", refreshRate);
@@ -137,7 +167,8 @@ function acima() {
 
     let div1Top = parseInt(getComputedStyle(div1).top);
 
-    div1.style.top = div1Top - speed;
+    if (mLock == 0)
+        div1.style.top = div1Top - speed;
     if (div1Top <= 0) {
         clearInterval(timer);
         timer = setInterval("baixo()", refreshRate);
@@ -186,11 +217,13 @@ function colisao() {
 
     if (((div1Left >= div2Left) && (div1Left <= div2Left + div2Width)) &&
         ((div1Top >= div2Top) && (div1Top <= div2Top + div2Height))) {
+        score.play();
         getTile();
         drawPoints();
     }
     if (((div2Left >= div1Left) && (div2Left <= div1Left + div1Width)) &&
         ((div2Top >= div1Top) && (div2Top <= div1Top + div1Height))) {
+        score.play();
         getTile();
         drawPoints();
     }
@@ -214,12 +247,11 @@ function drawPoints(){
 
 projectiles = [];
 n = 0;
-//control = setInterval("shootin()", 2000);
 shootControl = [];
 
-random = Math.random;
-
 function shootin(){
+    
+    random = Math.random;
 
     game = document.querySelector('.game');
     X = Math.round(random()*10);
@@ -264,10 +296,12 @@ function shootin(){
 
     shootControl[n] = setInterval('fire()', 17);
     
+
+    soundEffect.play();
+
 }
 
 function fire(){
-    shootSpeed = 5;
 
     Xc = parseInt(getComputedStyle(id).left);        
     id.style.left = Xc + (shootSpeed * X / getHypo(X, Y));
@@ -277,8 +311,9 @@ function fire(){
     if(parseInt(getComputedStyle(id).left) >= borderX || parseInt(getComputedStyle(id).left) < -20
     || parseInt(getComputedStyle(id).top) >= borderY || parseInt(getComputedStyle(id).top) < -20){
         clearInterval(shootControl[n])
-        n++;
+        
         fundo.removeChild(id);
+        n++;
         shootin();
     }
 
@@ -292,6 +327,9 @@ function fire(){
 
     if((shootLeft >= div1Left && shootLeft <= div1Left + div1Width) &&
     (shootTop >= div1Top && shootTop <= div1Top + div1Height)){
+        mLock = 1;
+        fundo.removeChild(id);
+        
         endGame();
         // setInterval('endGame()', 1000);
     }
@@ -316,13 +354,22 @@ class projectile{
 }
 
 function endGame () {
+    localStorage.setItem(`Pontuação${pointCounter}`, `${points}`);
+    localStorage.setItem('index', `${pointCounter}`);
+    para();
+    projectiles = [];
+    clearInterval(shootControl[n]);
+    shootControl = [];
+    n = 0;
+    pointCounter++;
+
     clearInterval(impact);
     clearInterval(shootControl[n]);
-    clearInterval(timer);
-    popUp = document.createElement('div');
-    popUp.setAttribute('id', 'endGame');
-    popUp.innerHTML = `> Fim de jogo! <<br><hr><br>Tu conseguiu <p style='color: orange; display: inline-block'>${points} ponto(s)</p>
-    <br><br><hr><br> <button type='button' id='again' onclick= 'window.location.reload()'>Jogar denovo?</button>`;
-    document.body.appendChild(popUp);
+    popUp.style.display = 'block';
+    popUp.innerHTML = `> Fim de jogo! <<br><hr><br>Você conseguiu <p style='color: orange; display: inline-block'>${points} ponto(s)</p>
+    <br><br><hr><br> <button type='button' id='again' onclick= 'start()'>Jogar denovo?</button>`;
+    points = 0;
+    let sel = document.querySelector('#points');
+    sel.innerHTML = `Points: ${points}`;
 }
 
