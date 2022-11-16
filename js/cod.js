@@ -1,6 +1,6 @@
 //Ao carregar a página estas linhas são executadas. 
 popUp = document.querySelector('#popUp');
-popUp.innerHTML = 'Bem vind@! <hr><br><br>>ㅤNeste hoje o teu objetivo é capturar o quadrado vermelho tanto quanto possível.<br><br> A quantidade de vezes que tu consiguir será convertida em pontos <br><br>Mas cuidado! Ao longo da partida, projéteis serão lançados contra ti! Desvie deles.<br><br>Ambas velocidades, dos projéteis e do teu quadrado aumentam com o tempo, tenha isso em mente.<br><br>E é isso, bom jogo! <br><br><button type="button" id="again" onclick= "start()">Começar</button>';
+popUp.innerHTML = 'Bem vind@! <hr><br><br>>ㅤNeste hoje o teu objetivo é capturar o quadrado vermelho tanto quanto possível.<br><br> A quantidade de vezes que tu consiguir será convertida em pontos, que serão armazenados no pódio, clique nos "points" e veja! <br><br>Mas cuidado! Ao longo da partida, projéteis serão lançados contra ti! Desvie deles.<br><br>Ambas velocidades, dos projéteis e do teu quadrado aumentam com o tempo, tenha isso em mente.<br><br>E é isso, bom jogo! <br><br><button type="button" onclick= "start()">Começar</button>';
 
 soundEffect = new Audio('../sounds/shoot.mp3')
 soundEffect.volume = .2;
@@ -28,8 +28,9 @@ function sound(counter){
     }
 }
 
+mLock = 1;
+
 function start(){
-    pointCounter = 0 + Number(localStorage.getItem('index'));
     music.play();
     music.loop = true;
     div1.style.left = headX;
@@ -354,22 +355,61 @@ class projectile{
 }
 
 function endGame () {
-    localStorage.setItem(`Pontuação${pointCounter}`, `${points}`);
-    localStorage.setItem('index', `${pointCounter}`);
+    podium(points, '');
     para();
     projectiles = [];
     clearInterval(shootControl[n]);
     shootControl = [];
     n = 0;
-    pointCounter++;
 
     clearInterval(impact);
     clearInterval(shootControl[n]);
     popUp.style.display = 'block';
     popUp.innerHTML = `> Fim de jogo! <<br><hr><br>Você conseguiu <p style='color: orange; display: inline-block'>${points} ponto(s)</p>
-    <br><br><hr><br> <button type='button' id='again' onclick= 'start()'>Jogar denovo?</button>`;
+    <br><br><hr><br> <button type='button' onclick= 'start()'>Jogar denovo?</button>`;
     points = 0;
     let sel = document.querySelector('#points');
     sel.innerHTML = `Points: ${points}`;
+}
+
+localStorage.setItem('p0', '0');
+localStorage.setItem('p1', '0');
+localStorage.setItem('p2', '0');
+
+function podium(matchPoints, operation){
+    let points = [];
+    
+    for(i = 0; i < localStorage.length; i++){
+        points[i] = Number(localStorage[`p${i}`]);
+    }
+    if(matchPoints > points[0]){
+        points[2] = points[1];
+        points[1] = points[0];
+        points[0] = matchPoints;   
+    } 
+    else if (matchPoints > points[1]){
+        points[2] = points[1];
+        points[1] = matchPoints;   
+    }
+    else if (matchPoints > points[2]){
+        points[2] = matchPoints;   
+    }
+
+    for(i = 0; i < localStorage.length; i++){
+        localStorage.setItem(`p${i}`, points[i]);
+    }
+    if(operation == 'open' && mLock == 1){
+        popUp.style.display = 'block';
+        popUp.innerHTML = `
+        <h1>Pódio</h1><hr>
+        <br>🥇 > <strong>Melhor pontuação:</strong> ${points[0]} points
+        <br><br>🥈 > <strong>Segunda melhor:</strong> ${points[1]} points
+        <br><br>🥉 > <strong>Terceira melhor:</strong> ${points[2]} points
+        <br><br><button type='button' onclick="podium(0, 'close')">Fechar</button>`;
+    }
+    if(operation == 'close' && mLock == 1){
+        popUp.style.display = 'none';
+        popUp.innerHTML = '';
+    }
 }
 
