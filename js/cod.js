@@ -436,13 +436,40 @@ function podium(matchPoints, operation) { //change matchPoints to matchPoints
     let p2 = '***';
 
     if (!localStorage.getItem('p0')) { //if it returns null
+        p0 = pts;
         localStorage.setItem('p0', pts);
     }
     else if (!localStorage.getItem('p1')) {
-        localStorage.setItem('p1', pts);
+        if (pts > p0) {
+            p2 = p1;
+            p1 = p0;
+            p0 = pts;
+            localStorage.setItem('p0', p0);
+            localStorage.setItem('p1', p1);
+            localStorage.setItem('p2', p2);
+        }
+        else{
+            p1 = pts;
+            localStorage.setItem('p1', pts);
+        }
     }
     else if (!localStorage.getItem('p2')) {
-        localStorage.setItem('p2', pts);
+        if (pts > p0) {
+            p2 = p1;
+            p1 = p0;
+            p0 = pts;
+            localStorage.setItem('p0', p0);
+            localStorage.setItem('p1', p1);
+            localStorage.setItem('p2', p2);
+        }
+        else if (pts > p1) {
+            p2 = p1;
+            p1 = pts;
+            localStorage.setItem('p1', p1);
+            localStorage.setItem('p2', p2);
+        }
+        else
+            localStorage.setItem('p2', pts);
     }
     else { //here the other comparations go
         p0 = Number(localStorage.getItem('p0'));
@@ -544,21 +571,3 @@ document.addEventListener("keyup", (e) => {
         }
     }
 })
-
-
-/*
-    local storage('p0', value; p1', value;'p2', value)
-
-    if(!localstorage.getItem('p0')){ //if it returns null
-        localStorage.setItem('p0', points)
-    }
-    else if(!localstorage.getItem('p1')) {
-        localStorage.setItem('p1', points)
-    }
-    else if(!localstorage.getItem('p2')) {
-        localStorage.setItem('p2', points)
-    }
-    else{ //here the other comparations go
-
-    }
-*/
