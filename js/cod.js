@@ -49,6 +49,9 @@ function start() {
     lockcima = 0;
     lockdireita = 0;
     lockesquerda = 0;
+    p0 = 0;
+    p1 = 0;
+    p2 = 0;
 
     if (window.innerWidth > 500) {
         speed = 7;
@@ -431,16 +434,13 @@ sessionPoints = [];
 
 function podium(matchPoints, operation) { //change matchPoints to matchPoints
     let pts = matchPoints;
-    let p0 = '***';
-    let p1 = '***';
-    let p2 = '***';
 
     if (!localStorage.getItem('p0')) { //if it returns null
         console.log('here0');
         p0 = pts;
         localStorage.setItem('p0', pts);
-    }
-    else if (!localStorage.getItem('p1')) {
+        return
+    } else if (!localStorage.getItem('p1')) {
         console.log('here1');
         if (pts > p0) {
             p2 = p1;
@@ -454,8 +454,7 @@ function podium(matchPoints, operation) { //change matchPoints to matchPoints
             p1 = pts;
             localStorage.setItem('p1', pts);
         }
-    }
-    else if (!localStorage.getItem('p2')) {
+    } else if (!localStorage.getItem('p2')) {
         console.log('here2');
         if (pts > p0) {
             p2 = p1;
@@ -473,8 +472,7 @@ function podium(matchPoints, operation) { //change matchPoints to matchPoints
         }
         else
             localStorage.setItem('p2', pts);
-    }
-    else { //here the other comparations go
+    } else { //here the other comparations go
         p0 = Number(localStorage.getItem('p0'));
         p1 = Number(localStorage.getItem('p1'));
         p2 = Number(localStorage.getItem('p2'));
