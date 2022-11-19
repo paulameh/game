@@ -436,10 +436,12 @@ function podium(matchPoints, operation) { //change matchPoints to matchPoints
     let p2 = '***';
 
     if (!localStorage.getItem('p0')) { //if it returns null
+        console.log('here0');
         p0 = pts;
         localStorage.setItem('p0', pts);
     }
     else if (!localStorage.getItem('p1')) {
+        console.log('here1');
         if (pts > p0) {
             p2 = p1;
             p1 = p0;
@@ -454,6 +456,7 @@ function podium(matchPoints, operation) { //change matchPoints to matchPoints
         }
     }
     else if (!localStorage.getItem('p2')) {
+        console.log('here2');
         if (pts > p0) {
             p2 = p1;
             p1 = p0;
