@@ -1,6 +1,6 @@
 //Ao carregar a página estas linhas são executadas. 
 popUp = document.querySelector('#popUp');
-popUp.innerHTML = 'Bem vind@! <hr><br><br>>ㅤNeste hoje o teu objetivo é capturar o quadrado vermelho tanto quanto possível.<br><br> A quantidade de vezes que tu consiguir será convertida em pontos, que serão armazenados no pódio, clique nos "points" e veja! <br><br>Mas cuidado! Ao longo da partida, projéteis serão lançados contra ti! Desvie deles.<br><br>Ambas velocidades, dos projéteis e do teu quadrado aumentam com o tempo, tenha isso em mente.<br><br>E é isso, bom jogo! <br><br><button type="button" onclick= "start()">Começar</button>';
+popUp.innerHTML = 'Bem vind@! <hr><br><br>>ㅤNeste jogo o seu objetivo é capturar o quadrado vermelho, enquanto desvia dos projéteis, e assim conseguir pontos.<br><br>Os pontos serão armazenados no pódio, clique nos "points" após o fim desta partida.<br><br>Ambas velocidades, dos projéteis e do seu quadrado aumentam com o tempo, tenha isso em mente.<br><br>Se possível, use teclado do seu computador, wasd ou as setas <br><br> <strong>bom jogo!</strong> <br><br><button type="button" onclick= "start()">Começar</button>';
 
 soundEffect = new Audio('../sounds/shoot.mp3')
 soundEffect.volume = .2;
@@ -12,15 +12,15 @@ music = new Audio('../sounds/music.mp3');
 music.volume = .01;
 musicCounter = 0;
 
-function sound(counter){
+function sound(counter) {
     musicIcon = document.querySelector('#musicIcon');
-    if(counter == 0){
+    if (counter == 0) {
         music.volume = 0;
         musicIcon.setAttribute('src', '../imgs/mute.png')
         musicCounter = 1;
         return
     }
-    if(counter == 1){
+    if (counter == 1) {
         musicIcon.setAttribute('src', '../imgs/sound.png')
         musicCounter = 0;
         music.volume = .01;
@@ -30,7 +30,7 @@ function sound(counter){
 
 mLock = 1;
 
-function start(){
+function start() {
     music.play();
     music.loop = true;
     div1.style.left = headX;
@@ -45,18 +45,22 @@ function start(){
     impact = setInterval("colisao()", 1);
     mLock = 0;
     getTile();
+    lockbaixo = 0;
+    lockcima = 0;
+    lockdireita = 0;
+    lockesquerda = 0;
 
-    if(window.innerWidth > 500){
+    if (window.innerWidth > 500) {
         speed = 7;
         shootSpeed = 5;
-        increaseRate = 2;
-        borderHelper = 1.2;
+        increaseRate = .75;
+        borderHelper = 1;
     }
     else {
         speed = 2.5;
         shootSpeed = 3;
-        increaseRate = 1.5;
-        borderHelper = 1.3;
+        increaseRate = .4;
+        borderHelper = 1;
     }
 
 }
@@ -64,7 +68,7 @@ function start(){
 document.querySelector("#acima").addEventListener("click", () => { move('acima') });
 document.querySelector("#esquerda").addEventListener("click", () => { move('esquerda') });
 document.querySelector("#direita").addEventListener("click", () => { move('direita') });
-document.querySelector("#baixo").addEventListener("click", () => { move('baixo') });  
+document.querySelector("#baixo").addEventListener("click", () => { move('baixo') });
 
 
 //20 tiles
@@ -77,32 +81,36 @@ refreshRate = 20;
 points = 0;
 
 
-function getTile(){
+function getTile() {
     div2Width = parseInt(getComputedStyle(div2).width);
     div2Height = parseInt(getComputedStyle(div2).height);
     let luckX = -1;
     let luckY = -1;
-    while(luckX < 1 || luckX > 20 || luckY < 1 || luckY > 20){
+    while (luckX < 1 || luckX > 20 || luckY < 1 || luckY > 20) {
         luckX = parseInt(10 * (Math.random() + Math.random()) + 3 * Math.random());
         luckY = parseInt(10 * (Math.random() + Math.random()) + 3 * Math.random());
     }
 
     div2Left = parseInt(getComputedStyle(div2).left);
 
-    if(luckX == 20)
+    if (luckX == 20)
         div2.style.left = tileX * luckX - div2Width;
     else
         div2.style.left = tileX * luckX;
-    if(luckY > 18)
+    if (luckY > 18)
         div2.style.top = tileY * luckY - div2Height;
     else
-    div2.style.top = tileY * luckY;
+        div2.style.top = tileY * luckY;
 }
 
 // Mover cursor 1  - através dos botões
 function move(Direcao) {
     if (contador != '') {
         para();
+        lockcima = 3;
+        lockesquerda = 3;
+        lockdireita = 3;
+        lockbaixo = 3;
     }
     if (Direcao == "direita" && mLock == 0) {
         timer = setInterval("direita()", refreshRate);
@@ -131,9 +139,9 @@ function direita() {
     let div1Left = parseInt(getComputedStyle(div1).left);
     let fundoWidth = parseInt(getComputedStyle(fundo).width);
     let div1Width = parseInt(getComputedStyle(div1).width);
-    if (mLock == 0)
+    if (mLock == 0 && lockdireita == 3)
         div1.style.left = div1Left + speed;
-    if (div1Left >= fundoWidth - div1Width * borderHelper) {
+    if (div1Left >= fundoWidth - div1Width * borderHelper && lockdireita == 3){
         clearInterval(timer);
         timer = setInterval("esquerda()", refreshRate);
     }
@@ -143,9 +151,9 @@ function esquerda() {
 
     let div1Left = parseInt(getComputedStyle(div1).left);
 
-    if (mLock == 0)
+    if (mLock == 0 && lockesquerda == 3)
         div1.style.left = div1Left - speed;
-    if (div1Left <= 0) {
+    if (div1Left <= 0 && lockesquerda == 3) {
         clearInterval(timer);
         timer = setInterval("direita()", refreshRate);
     }
@@ -157,9 +165,9 @@ function baixo() {
     let fundoHeight = parseInt(getComputedStyle(fundo).height);
     let div1Height = parseInt(getComputedStyle(div1).height);
 
-    if (mLock == 0)
+    if (mLock == 0 && lockbaixo == 3)
         div1.style.top = div1Top + speed;
-    if (div1Top >= fundoHeight - div1Height * borderHelper) {
+    if (div1Top >= fundoHeight - div1Height * borderHelper && lockbaixo == 3){
         clearInterval(timer);
         timer = setInterval("acima()", refreshRate);
     }
@@ -168,12 +176,59 @@ function acima() {
 
     let div1Top = parseInt(getComputedStyle(div1).top);
 
-    if (mLock == 0)
+    if (mLock == 0 && lockcima == 3)
         div1.style.top = div1Top - speed;
-    if (div1Top <= 0) {
+    if (div1Top <= 0 && lockcima == 3){
         clearInterval(timer);
         timer = setInterval("baixo()", refreshRate);
     }
+}
+
+
+function direita2() {
+
+    let div1Left = parseInt(getComputedStyle(div1).left);
+    let fundoWidth = parseInt(getComputedStyle(fundo).width);
+    let div1Width = parseInt(getComputedStyle(div1).width);
+    if (mLock == 0 && !(div1Left >= fundoWidth - div1Width * borderHelper))
+        div1.style.left = div1Left + speed;
+    if (div1Left >= fundoWidth - div1Width * borderHelper){
+        clearInterval(intervaldireita);
+    }
+}
+
+function esquerda2() {
+
+    let div1Left = parseInt(getComputedStyle(div1).left);
+
+    if (mLock == 0 && !(div1Left < 0))
+        div1.style.left = div1Left - speed;
+    if (div1Left < 0){
+        clearInterval(intervalesquerda);
+    }
+}
+
+function baixo2() {
+
+    let div1Top = parseInt(getComputedStyle(div1).top);
+    let fundoHeight = parseInt(getComputedStyle(fundo).height);
+    let div1Height = parseInt(getComputedStyle(div1).height);
+
+    if (mLock == 0 && !(div1Top >= fundoHeight - div1Height * borderHelper))
+        div1.style.top = div1Top + speed;
+    if (div1Top >= fundoHeight - div1Height * borderHelper){
+        clearInterval(intervalbaixo);
+    }
+}
+function acima2() {
+
+    let div1Top = parseInt(getComputedStyle(div1).top);
+
+    if (mLock == 0 && !(div1Top < 0))
+        div1.style.top = div1Top - speed;
+    if (div1Top < 0){
+        clearInterval(intervalcima);
+    }        
 }
 
 // Parar div1
@@ -231,14 +286,14 @@ function colisao() {
 }
 
 //Speed increasing here
-function drawPoints(){
+function drawPoints() {
     points++;
     let sel = document.querySelector('#points');
     sel.innerHTML = `Points: ${points}`;
 
-    if(points % 7 == 0)
+    if (points % 7 == 0)
         speed += increaseRate;
-    if(points % 5 == 0)
+    if (points % 5 == 0)
         shootSpeed += .5;
 }
 
@@ -250,13 +305,13 @@ projectiles = [];
 n = 0;
 shootControl = [];
 
-function shootin(){
-    
+function shootin() {
+
     random = Math.random;
 
     game = document.querySelector('.game');
-    X = Math.round(random()*10);
-    Y = Math.round(random()*10);
+    X = Math.round(random() * 10);
+    Y = Math.round(random() * 10);
     let fundoWidth = parseInt(getComputedStyle(fundo).width);
     let fundoHeight = parseInt(getComputedStyle(fundo).height);
 
@@ -276,17 +331,17 @@ function shootin(){
 
     document.querySelector('#fundo').appendChild(shoot);
 
-    if(X == 'left'){
+    if (X == 'left') {
         document.querySelector(`#shoot${n}`).style.left = -5;
     }
     else
         document.querySelector(`#shoot${n}`).style.left = fundoWidth - 10;
-    
-    if(Y == 'top')
+
+    if (Y == 'top')
         document.querySelector(`#shoot${n}`).style.top = -5;
     else
-        document.querySelector(`#shoot${n}`).style.top = fundoHeight -10;
-    
+        document.querySelector(`#shoot${n}`).style.top = fundoHeight - 10;
+
     //prepare(projectiles[n]);
 
     id = document.querySelector(projectiles[n]);
@@ -296,23 +351,23 @@ function shootin(){
     Y = parseInt(getComputedStyle(div1).top) - parseInt(getComputedStyle(id).top);
 
     shootControl[n] = setInterval('fire()', 17);
-    
+
 
     soundEffect.play();
 
 }
 
-function fire(){
+function fire() {
 
-    Xc = parseInt(getComputedStyle(id).left);        
+    Xc = parseInt(getComputedStyle(id).left);
     id.style.left = Xc + (shootSpeed * X / getHypo(X, Y));
     Yc = parseInt(getComputedStyle(id).top);
     id.style.top = Yc + (shootSpeed * Y / getHypo(X, Y));
 
-    if(parseInt(getComputedStyle(id).left) >= borderX || parseInt(getComputedStyle(id).left) < -20
-    || parseInt(getComputedStyle(id).top) >= borderY || parseInt(getComputedStyle(id).top) < -20){
+    if (parseInt(getComputedStyle(id).left) >= borderX || parseInt(getComputedStyle(id).left) < -20
+        || parseInt(getComputedStyle(id).top) >= borderY || parseInt(getComputedStyle(id).top) < -20) {
         clearInterval(shootControl[n])
-        
+
         fundo.removeChild(id);
         n++;
         shootin();
@@ -326,27 +381,27 @@ function fire(){
     shootLeft = parseInt(getComputedStyle(id).left);
     shootTop = parseInt(getComputedStyle(id).top);
 
-    if((shootLeft >= div1Left && shootLeft <= div1Left + div1Width) &&
-    (shootTop >= div1Top && shootTop <= div1Top + div1Height)){
+    if ((shootLeft >= div1Left && shootLeft <= div1Left + div1Width) &&
+        (shootTop >= div1Top && shootTop <= div1Top + div1Height)) {
         mLock = 1;
         fundo.removeChild(id);
-        
+
         endGame();
         // setInterval('endGame()', 1000);
     }
 }
 
-function getHypo(x, y){
-    return parseInt(Math.sqrt((x**2 + y**2), 2));
+function getHypo(x, y) {
+    return parseInt(Math.sqrt((x ** 2 + y ** 2), 2));
 }
 
 
-class projectile{
+class projectile {
     id;
     function;
     X;
     Y;
-    constructor (id, func, X, Y){
+    constructor(id, func, X, Y) {
         this.id = `#shoot${id}`;
         this.function = func;
         this.X = X;
@@ -354,7 +409,7 @@ class projectile{
     }
 }
 
-function endGame () {
+function endGame() {
     podium(points, '');
     para();
     projectiles = [];
@@ -372,44 +427,138 @@ function endGame () {
     sel.innerHTML = `Points: ${points}`;
 }
 
-localStorage.setItem('p0', '0');
-localStorage.setItem('p1', '0');
-localStorage.setItem('p2', '0');
+sessionPoints = [];
 
-function podium(matchPoints, operation){
-    let points = [];
-    
-    for(i = 0; i < localStorage.length; i++){
-        points[i] = Number(localStorage[`p${i}`]);
+function podium(matchPoints, operation) { //change matchPoints to matchPoints
+    let pts = matchPoints;
+    let p0 = '***';
+    let p1 = '***';
+    let p2 = '***';
+
+    if (!localStorage.getItem('p0')) { //if it returns null
+        localStorage.setItem('p0', pts);
     }
-    if(matchPoints > points[0]){
-        points[2] = points[1];
-        points[1] = points[0];
-        points[0] = matchPoints;   
-    } 
-    else if (matchPoints > points[1]){
-        points[2] = points[1];
-        points[1] = matchPoints;   
+    else if (!localStorage.getItem('p1')) {
+        localStorage.setItem('p1', pts);
     }
-    else if (matchPoints > points[2]){
-        points[2] = matchPoints;   
+    else if (!localStorage.getItem('p2')) {
+        localStorage.setItem('p2', pts);
+    }
+    else { //here the other comparations go
+        p0 = Number(localStorage.getItem('p0'));
+        p1 = Number(localStorage.getItem('p1'));
+        p2 = Number(localStorage.getItem('p2'));
+
+        if (pts > p0) {
+            p2 = p1;
+            p1 = p0;
+            p0 = pts;
+        }
+        else if (pts > p1) {
+            p2 = p1;
+            p1 = pts;
+        }
+        else if (pts > p2) {
+            p2 = pts;
+        }
+
+        localStorage.setItem('p0', p0);
+        localStorage.setItem('p1', p1);
+        localStorage.setItem('p2', p2);
+
     }
 
-    for(i = 0; i < localStorage.length; i++){
-        localStorage.setItem(`p${i}`, points[i]);
-    }
-    if(operation == 'open' && mLock == 1){
+    if (operation == 'open' && mLock == 1) {
         popUp.style.display = 'block';
         popUp.innerHTML = `
         <h1>Pódio</h1><hr>
-        <br>🥇 > <strong>Melhor pontuação:</strong> ${points[0]} points
-        <br><br>🥈 > <strong>Segunda melhor:</strong> ${points[1]} points
-        <br><br>🥉 > <strong>Terceira melhor:</strong> ${points[2]} points
+        <br>🥇 > <strong>Melhor pontuação:</strong> ${p0} points
+        <br><br>🥈 > <strong>Segunda melhor:</strong> ${p1} points
+        <br><br>🥉 > <strong>Terceira melhor:</strong> ${p2} points
         <br><br><button type='button' onclick="podium(0, 'close')">Fechar</button>`;
     }
-    if(operation == 'close' && mLock == 1){
+    if (operation == 'close' && mLock == 1) {
+        start();
         popUp.style.display = 'none';
         popUp.innerHTML = '';
     }
 }
 
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+intervalp = 20;
+
+document.addEventListener("keydown", (e) => {
+    if (e.key == "a" || e.key == "A" || e.key == "ArrowLeft") {
+        if (lockesquerda == 0) {
+            intervalesquerda = setInterval(esquerda2, intervalp);
+            lockesquerda = 1
+        }
+    }
+    if (e.key == "d" || e.key == "D" || e.key == "ArrowRight") {
+        if (lockdireita == 0) {
+            intervaldireita = setInterval(direita2, intervalp);
+            lockdireita = 1;
+        }
+    }
+    if (e.key == "w" || e.key == "W" || e.key == "ArrowUp") {
+        if (lockcima == 0) {
+            intervalcima = setInterval(acima2, intervalp);
+            lockcima = 1;
+        }
+    }
+    if (e.key == "s" || e.key == "S" || e.key == "ArrowDown") {
+        if (lockbaixo == 0) {
+            intervalbaixo = setInterval(baixo2, intervalp);
+            lockbaixo = 1
+        }
+    }
+})
+//SOLTAR TECLA
+document.addEventListener("keyup", (e) => {
+
+    if (e.key == "a" || e.key == "A" || e.key == "ArrowLeft") {
+        if (lockesquerda == 1) {
+            clearInterval(intervalesquerda);
+            lockesquerda = 0
+        }
+    }
+    if (e.key == "d" || e.key == "D" || e.key == "ArrowRight") {
+        if (lockdireita == 1) {
+            clearInterval(intervaldireita);
+            lockdireita = 0;
+        }
+    }
+    if (e.key == "w" || e.key == "W" || e.key == "ArrowUp") {
+        if (lockcima == 1) {
+            clearInterval(intervalcima);
+            lockcima = 0;
+        }
+    }
+    if (e.key == "s" || e.key == "S" || e.key == "ArrowDown") {
+        if (lockbaixo == 1) {
+            clearInterval(intervalbaixo);
+            lockbaixo = 0;
+        }
+    }
+})
+
+
+/*
+    local storage('p0', value; p1', value;'p2', value)
+
+    if(!localstorage.getItem('p0')){ //if it returns null
+        localStorage.setItem('p0', points)
+    }
+    else if(!localstorage.getItem('p1')) {
+        localStorage.setItem('p1', points)
+    }
+    else if(!localstorage.getItem('p2')) {
+        localStorage.setItem('p2', points)
+    }
+    else{ //here the other comparations go
+
+    }
+*/

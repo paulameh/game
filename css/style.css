@@ -107,14 +107,14 @@ body {
     height: 2.75rem;
     position: absolute;
     top: 1vh;
-    left: 93vw;
+    left: 91.75vw;
     z-index: 99;
     cursor: pointer;
+    border-radius: 45px;
     transition: .25s ease-in-out;
 }
 
 #sound:hover{
-    border-radius: 45px;
     outline: 3px solid white;
 }
 
